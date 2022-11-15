@@ -191,7 +191,7 @@ i {
 #sidebar nav a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   overflow: hidden;
 
   white-space: pre;
