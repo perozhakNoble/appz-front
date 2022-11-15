@@ -7,7 +7,7 @@ import ErrorPage from "./components/ErrorPage";
 import Index from "./routes/Index";
 import Profile from "./routes/Profile";
 import Stats from "./routes/Stats";
-import Expenses from "./routes/Expenses";
+import Expenses, { loader as expensesLoader } from "./routes/Expenses";
 import Graph, { loader as graphLoader } from "./routes/Graph";
 
 const router = createBrowserRouter(
@@ -18,7 +18,7 @@ const router = createBrowserRouter(
 
         <Route path="profile" element={<Profile />} />
         <Route path="stats" element={<Stats />}></Route>
-        <Route path="expenses" element={<Expenses />}>
+        <Route path="expenses" loader={expensesLoader} element={<Expenses />}>
           <Route
             loader={graphLoader}
             index

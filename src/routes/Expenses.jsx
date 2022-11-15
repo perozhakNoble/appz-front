@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Outlet } from "react-router-dom";
+import { Form, Outlet, useLoaderData } from "react-router-dom";
 import Loader from "../components/Loader";
 import PageHeader from "../components/PageHeader";
 import { getExportFile } from "../services/export";
@@ -7,12 +7,28 @@ import { getExportFile } from "../services/export";
 const categoryOptions = ["Проживання", "Харчування", "Одяг", "Предмети Гігієни", "Дитячі іграшки"];
 const buttonExportClasses = "rounded p-1 px-5 font-bold text-white flex items-center disabled:opacity-70 ";
 
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const category = url.searchParams.get("category");
+  const dateFrom = url.searchParams.get("dateFrom");
+  const dateTo = url.searchParams.get("dateTo");
+
+  return {
+    category,
+    dateFrom,
+    dateTo,
+  };
+}
+
 const Expenses = () => {
   const [isLoading, setLoading] = useState(null);
 
+  const { category, dateFrom, dateTo } = useLoaderData();
+
   const download = async (type = "pdf") => {
     setLoading(type);
-    const url = await getExportFile(type);
+
+    const url = await getExportFile(category, dateFrom, dateTo, type);
 
     const anchor = document.createElement("a");
     anchor.href = url;

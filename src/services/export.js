@@ -1,11 +1,16 @@
-export const getExportFile = async (
-  //category, dateFrom, dateTo,
-  type = "pdf"
-) => {
+import axios from "axios";
+
+export const getExportFile = async (category, dateFrom, dateTo, type = "pdf") => {
   try {
-    const res = await fetch(`http://localhost:8080/export-${type}`);
-    //?category=${category}&start_date=${dateFrom}&end_date=${dateTo}
-    const data = await res.blob();
+    const res = await axios.get(`http://localhost:8080/export-${type}`, {
+      params: {
+        category,
+        start_date: dateFrom,
+        end_date: dateTo,
+      },
+      responseType: "blob",
+    });
+    const data = res.data;
     const url = URL.createObjectURL(data);
     return url;
   } catch (err) {
