@@ -5,27 +5,29 @@ import { UserIcon, ChartBarSquareIcon } from "@heroicons/react/24/outline";
 function Root() {
   return (
     <>
-      <div id="sidebar">
-        <h1>ІКСХА</h1>
-        <nav>
-          <ul>
-            <li>
-              <Link to={`profile`}>
-                <UserIcon className="w-6" />
+      <div className="fixed h-full w-64">
+        <div id="sidebar" className="flex h-full">
+          <h1>ІКСХА</h1>
+          <nav>
+            <ul>
+              <li>
+                <Link to={`profile`}>
+                  <UserIcon className="w-6" />
 
-                <div>Профіль</div>
-              </Link>
-            </li>
-            <li>
-              <Link to={`stats`}>
-                <ChartBarSquareIcon className="w-6" />
-                <div>Статистика</div>
-              </Link>
-            </li>
-          </ul>
-        </nav>
+                  <div>Профіль</div>
+                </Link>
+              </li>
+              <li>
+                <Link to={`stats`}>
+                  <ChartBarSquareIcon className="w-6" />
+                  <div>Статистика</div>
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
-      <div id="detail">
+      <div id="detail" className="w-10/12 ml-64">
         <Outlet />
       </div>
     </>

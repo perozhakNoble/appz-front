@@ -47,16 +47,30 @@ const Expenses = () => {
       <PageHeader text="Витрати" />
 
       <Form className="flex gap-6 p-4 mt-8">
-        <select name="category" className="border-2 border-slate-400 w-40 rounded h-10 px-3">
+        <select
+          name="category"
+          className="border-[1px] border-slate-400 w-50 rounded shadow px-2 cursor-pointer hover:shadow-md h-10"
+        >
           {categoryOptions.map((category) => (
             <option value={category} key={category}>
               {category}
             </option>
           ))}
         </select>
-        <input type="date" name="dateFrom" className="border-2 border-slate-400 w-40 rounded h-10" />
-        <input type="date" name="dateTo" className="border-2 border-slate-400 w-40 rounded h-10" />
-        <button type="submit" className="border-2 border-sky-400 px-3 rounded h-10 ml-4">
+        <input
+          type="date"
+          name="dateFrom"
+          className="border-[1px] border-slate-400 w-40 rounded shadow px-2 cursor-pointer hover:shadow-md h-10"
+        />
+        <input
+          type="date"
+          name="dateTo"
+          className="border-[1px] border-slate-400 w-40 rounded shadow px-2 cursor-pointer hover:shadow-md h-10"
+        />
+        <button
+          type="submit"
+          className="border-[1px] border-sky-400 w-50 rounded shadow px-2 cursor-pointer hover:shadow-md h-10 ml-4 bg-sky-50"
+        >
           Отримати графік
         </button>
       </Form>
