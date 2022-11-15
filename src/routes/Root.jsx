@@ -1,11 +1,5 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { getTestData } from "../services/test";
-
-export async function loader() {
-  const test = await getTestData();
-  return { test };
-}
 
 function Root() {
   return (
