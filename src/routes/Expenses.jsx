@@ -51,6 +51,7 @@ const Expenses = () => {
           name="category"
           className="border-[1px] border-slate-400 w-50 rounded shadow px-2 cursor-pointer hover:shadow-md h-10"
         >
+          <option value="">Виберіть категорію</option>
           {categoryOptions.map((category) => (
             <option value={category} key={category}>
               {category}

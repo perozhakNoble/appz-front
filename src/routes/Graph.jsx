@@ -16,13 +16,13 @@ import {
   Pie,
 } from "recharts";
 
-export async function loader({ request, params }) {
+export async function loader({ request }) {
   const url = new URL(request.url);
   const category = url.searchParams.get("category");
   const dateFrom = url.searchParams.get("dateFrom");
   const dateTo = url.searchParams.get("dateTo");
 
-  const graphData = await getGraphData(category, dateFrom, dateTo);
+  const graphData = await getGraphData(category, dateFrom || null, dateTo || null);
   return {
     graphData: graphData?.map((data) => ({
       date: data.date,
