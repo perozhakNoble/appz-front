@@ -3,6 +3,15 @@ import { Form, Navigate, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { useAuth } from "../hooks/useAuth";
 
+const Input = ({ label, ...props }) => {
+  return (
+    <div className="w-full">
+      <div className="text-xl ml-2 mb-1">{label}</div>
+      <input {...props} className="shadow w-full px-4 bg-white rounded-full border-[1px] border-gray text-lg h-12" />
+    </div>
+  );
+};
+
 const Login = () => {
   const { user, login } = useAuth();
   const navigate = useNavigate();
@@ -20,23 +29,8 @@ const Login = () => {
     return false;
   }
 
-  const Input = ({
-    label,
-    //  value, setValue,
-    ...props
-  }) => {
-    return (
-      <div className="w-full">
-        <div className="text-xl ml-2 mb-1">{label}</div>
-        <input
-          {...props}
-          // value={value}
-          // onChange={(e) => setValue(e.currentTarget.value)}
-          className="shadow w-full px-4 bg-white rounded-full border-[1px] border-gray text-lg h-12"
-        />
-      </div>
-    );
-  };
+  const [username, setUsername] = useState("");
+  const [pass, setPass] = useState("");
 
   return (
     <div className="w-full h-full flex flex-col justify-center bg-sky-50 items-center">
@@ -50,15 +44,15 @@ const Login = () => {
         <Input
           type="text"
           name="username"
-          // value={username}
-          // onChange={(e) => setUsername(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           label={"Пошта"}
         />
         <Input
           type="password"
           name="password"
-          // value={pass}
-          // onChange={(e) => setPass(e.target.value)}
+          value={pass}
+          onChange={(e) => setPass(e.target.value)}
           label={"Пароль"}
         />
         <button
