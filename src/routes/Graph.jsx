@@ -1,4 +1,4 @@
-import React, { PureComponent, useState } from "react";
+import React, { PureComponent } from "react";
 import { useLoaderData } from "react-router-dom";
 import { getGraphData } from "../services/graph";
 import {
@@ -46,18 +46,92 @@ class CustomizedAxisTick extends PureComponent {
   }
 }
 
-const Graph = () => {
-  const { graphData } = useLoaderData();
+class GraphBuilder {
+  #activeIndex = 1;
+  #height = undefined;
+  #width = undefined;
+  #margin = {};
+  #pie = {};
+  #castedianGrid = undefined;
+  #yAxis = undefined;
+  #xAxis = undefined;
+  #tooltip = undefined;
+  #lines = [];
+  #bars = [];
+  #data = [];
+  #chart = "LineChaert";
 
-  ///
+  constructor(type) {
+    // this.#activeIndex = 0
+    // this.#height  = undefined
+    // this.#width = undefined
+    this.#chart = type;
+  }
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  #setActiveIndex(idx) {
+    this.#activeIndex = idx;
+  }
 
-  const onPieEnter = (_, index) => {
-    setActiveIndex(index);
+  #onPieEnter = (_, index) => {
+    this.#setActiveIndex(index);
   };
 
-  const renderActiveShape = (props) => {
+  setPie(data) {
+    this.#pie = data || {};
+    return this;
+  }
+
+  setMargin(data) {
+    this.#margin = data || {};
+    return this;
+  }
+
+  setWidth(data) {
+    this.#width = data;
+    return this;
+  }
+
+  setHeight(data) {
+    this.#height = data;
+    return this;
+  }
+
+  setCastedianGrid(data) {
+    this.#castedianGrid = <CartesianGrid {...data} />;
+    return this;
+  }
+
+  setData(data) {
+    this.#data = data;
+    return this;
+  }
+
+  setYAxis(data) {
+    this.#yAxis = <YAxis {...data} />;
+    return this;
+  }
+
+  setXAxis(data) {
+    this.#xAxis = <XAxis {...data} tick={<CustomizedAxisTick />} />;
+    return this;
+  }
+
+  setTooltip(data) {
+    this.#tooltip = <Tooltip {...data} />;
+    return this;
+  }
+
+  setLines(lines) {
+    this.#lines = lines.map((lineData, idx) => <Line type="monotone" {...lineData} key={idx} />);
+    return this;
+  }
+
+  setBars(bars) {
+    this.#bars = bars.map((barData, idx) => <Bar {...barData} key={idx} />);
+    return this;
+  }
+
+  #renderActiveShape = (props) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
     const sin = Math.sin(-RADIAN * midAngle);
@@ -117,7 +191,44 @@ const Graph = () => {
       </g>
     );
   };
-  ///
+
+  render() {
+    return (
+      <ResponsiveContainer height={this.#height} width={this.#width}>
+        {this.#chart === "LineChart" ? (
+          <LineChart data={this.#data} margin={this.#margin}>
+            {this.#castedianGrid} {this.#xAxis} {this.#yAxis} {this.#tooltip} {this.#lines}
+          </LineChart>
+        ) : this.#chart === "BarChart" ? (
+          <BarChart data={this.#data} margin={this.#margin}>
+            {this.#castedianGrid} {this.#xAxis} {this.#yAxis} {this.#tooltip} {this.#bars}
+          </BarChart>
+        ) : this.#chart === "PieChart" ? (
+          <PieChart>
+            <Pie
+              {...this.#pie}
+              data={this.#data}
+              activeIndex={this.#activeIndex}
+              activeShape={this.#renderActiveShape}
+              onMouseEnter={this.#onPieEnter}
+              innerRadius="50%"
+              paddingAngle={2}
+            >
+              {this.#data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+        ) : (
+          <></>
+        )}
+      </ResponsiveContainer>
+    );
+  }
+}
+
+const Graph = () => {
+  const { graphData } = useLoaderData();
 
   const pieData = [
     { value: graphData.reduce((prevValue, current) => (prevValue += current.USD), 0), name: "USD", color: "#39CCCC" },
@@ -128,9 +239,60 @@ const Graph = () => {
     },
   ];
 
+  const LineGraphic = new GraphBuilder("LineChart")
+    .setData(graphData)
+    .setCastedianGrid({ stroke: "#ccc", strokeDasharray: "5 5" })
+    .setMargin({ top: 5, right: 20, bottom: 25, left: 20 })
+    .setXAxis({ dataKey: "date" })
+    .setYAxis()
+    .setTooltip()
+    .setLines([
+      {
+        dataKey: "USD",
+        stroke: "#447ef7",
+      },
+      {
+        dataKey: "UAH",
+        stroke: "#fb404b",
+      },
+    ])
+    .render();
+
+  const BarGraphic = new GraphBuilder("BarChart")
+    .setData(graphData)
+    .setCastedianGrid({ stroke: "#ccc", strokeDasharray: "3 3" })
+    .setXAxis({ dataKey: "date" })
+    .setYAxis()
+    .setTooltip()
+    .setBars([
+      {
+        dataKey: "USD",
+        fill: "#8884d8",
+      },
+      {
+        dataKey: "UAH",
+        fill: "rgba(135,203,22,0.6)",
+      },
+    ])
+    .setMargin({ top: 5, right: 20, bottom: 25, left: 20 })
+    .setWidth(650)
+    .setHeight(450)
+    .render();
+
+  const PieGraphic = new GraphBuilder("PieChart")
+    .setData(pieData)
+    .setPie({ dataKey: "value" })
+    .setWidth(650)
+    .setHeight(450)
+    .render();
+
   return (
     <div className=" h-full p-2" style={{ width: "70vw" }}>
-      <ResponsiveContainer>
+      {LineGraphic}
+
+      <div className="h-20" />
+
+      {/* <ResponsiveContainer>
         <LineChart data={graphData} margin={{ top: 5, right: 20, bottom: 25, left: 20 }}>
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
           <XAxis dataKey="date" tick={<CustomizedAxisTick />} />
@@ -139,12 +301,13 @@ const Graph = () => {
           <Line type="monotone" dataKey="USD" stroke="#447ef7" />
           <Line type="monotone" dataKey="UAH" stroke="#fb404b" />
         </LineChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer> */}
 
       <div className="h-20" />
 
       <div className="flex gap-2">
-        <ResponsiveContainer height={450} width={650}>
+        {PieGraphic}
+        {/* <ResponsiveContainer height={450} width={650}>
           <PieChart>
             <Pie
               dataKey={"value"}
@@ -160,8 +323,8 @@ const Graph = () => {
               ))}
             </Pie>
           </PieChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer height={450} width={650}>
+        </ResponsiveContainer> */}
+        {/* <ResponsiveContainer height={450} width={650}>
           <BarChart data={graphData} margin={{ top: 5, right: 20, bottom: 25, left: 20 }}>
             <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
             <XAxis dataKey="date" tick={<CustomizedAxisTick />} />
@@ -170,7 +333,8 @@ const Graph = () => {
             <Bar dataKey="USD" fill="#8884d8" />
             <Bar dataKey="UAH" fill="rgba(135,203,22,0.6)" />
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer> */}
+        {BarGraphic}
       </div>
       <div className="h-20" />
     </div>
