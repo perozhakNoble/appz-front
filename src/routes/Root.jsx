@@ -1,8 +1,16 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserIcon, ChartBarSquareIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../hooks/useAuth";
 
 function Root() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout(() => navigate("/login"));
+  };
+
   return (
     <>
       <div className="fixed h-full w-64">
@@ -27,8 +35,17 @@ function Root() {
           </nav>
         </div>
       </div>
-      <div id="detail" className="w-10/12 ml-64">
-        <Outlet />
+      <div className="w-full ml-64 sticky">
+        <div className="bg-slate-200 border-b-[1px] border-gray-300 h-16 ">
+          <div>
+            <h3 className="block ml-auto mr-0 w-20 pt-4 text-lg cursor-pointer" onClick={handleLogout}>
+              Вийти
+            </h3>
+          </div>
+        </div>
+        <div id="detail">
+          <Outlet />
+        </div>
       </div>
     </>
   );

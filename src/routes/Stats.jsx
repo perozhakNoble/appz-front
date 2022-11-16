@@ -34,7 +34,7 @@ const Stats = () => {
             icon: <UserGroupIcon className="w-16 mt-10 ml-auto text-white" />,
           },
         ].map((module, idx) => (
-          <Link to={"/" + module.link} className="cursor-pointer w-[45%] h-64 hover:scale-105 transition-all">
+          <Link to={"/" + module.link} key={idx} className="cursor-pointer w-[45%] h-64 hover:scale-105 transition-all">
             <div className={`rounded ${module.color}  shadow-lg p-6  w-full h-full`}>
               <h3 className="text-white text-2xl">{module.title}</h3>
               {module.icon}
