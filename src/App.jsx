@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React from "react";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import ErrorPage from "./components/ErrorPage";
@@ -10,51 +10,7 @@ import Graph, { loader as graphLoader } from "./routes/Graph";
 import Login from "./routes/Login";
 import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-
-const USERS = [
-  {
-    id: 1,
-    firstName: "Vitalii",
-    lastName: "Perozhak",
-    email: "vitalii.perozhak@gmail.com",
-    password: "1111111Qq",
-  },
-  {
-    id: 2,
-    firstName: "Vitalii",
-    lastName: "Perozhak",
-    email: "vitalii.perozhak@noble.codes",
-    password: "1111111Qq",
-  },
-  {
-    id: 3,
-    firstName: "Olena",
-    lastName: "Gul",
-    email: "olena.gul@gmail.com",
-    password: "1111111Qq",
-  },
-  {
-    id: 4,
-    firstName: "Nata",
-    lastName: "Kuzo",
-    email: "nata.kuzo@gmail.com",
-    password: "1111111Qq",
-  },
-  {
-    id: 5,
-    firstName: "Vasyl",
-    lastName: "Liutan",
-    email: "vasyl.liutan@gmail.com",
-    password: "1111111Qq",
-  },
-  {
-    id: 6,
-    firstName: "Christina",
-    lastName: "Karpinets",
-    email: "chris.karpinets@gmail.com",
-    password: "1111111Qq",
-  },
-];
+import { USERS } from "./db";
 
 const users = JSON.parse(localStorage.getItem("users"));
 if (!users || !users.length) localStorage.setItem("users", JSON.stringify(USERS));
@@ -95,19 +51,11 @@ const router = createBrowserRouter(
   )
 );
 
-export const CurrentUserContext = createContext();
-
 const App = () => {
   return (
-    <CurrentUserContext.Provider
-      value={{
-        getCurrentUser: () => localStorage.getItem("currUser"),
-      }}
-    >
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </CurrentUserContext.Provider>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 };
 
