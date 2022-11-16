@@ -111,7 +111,7 @@ const Expenses = () => {
           >
             {isLoading === "csv" && (
               <div className="inline-block mr-2">
-                <Loader />
+                <Loader color="black" />
               </div>
             )}
             <span className="text-red-600">C</span>
