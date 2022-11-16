@@ -14,6 +14,7 @@ import {
   Sector,
   PieChart,
   Pie,
+  Cell,
 } from "recharts";
 
 export async function loader({ request }) {
@@ -72,7 +73,7 @@ const Graph = () => {
     const onlyRate = false;
 
     return (
-      <g>
+      <g className="z-50">
         <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
           {payload.name}
         </text>
@@ -119,10 +120,11 @@ const Graph = () => {
   ///
 
   const pieData = [
-    { value: graphData.reduce((prevValue, current) => (prevValue += current.USD), 0), name: "USD" },
+    { value: graphData.reduce((prevValue, current) => (prevValue += current.USD), 0), name: "USD", color: "#39CCCC" },
     {
       value: graphData.reduce((prevValue, current) => (prevValue += current.UAH), 0),
       name: "UAH",
+      color: "#ffa534",
     },
   ];
 
@@ -142,19 +144,21 @@ const Graph = () => {
       <div className="h-20" />
 
       <div className="flex gap-2">
-        <ResponsiveContainer height={450} width={550}>
+        <ResponsiveContainer height={450} width={650}>
           <PieChart>
             <Pie
               dataKey={"value"}
               data={pieData}
-              fillRule="nonzero"
-              fill={"#ffa534"}
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
               onMouseEnter={onPieEnter}
               innerRadius="50%"
               paddingAngle={2}
-            />
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
           </PieChart>
         </ResponsiveContainer>
         <ResponsiveContainer height={450} width={650}>
