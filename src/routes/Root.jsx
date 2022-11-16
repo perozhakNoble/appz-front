@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 
 function Root() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const handleLogout = () => {
     logout(() => navigate("/login"));
@@ -37,7 +37,8 @@ function Root() {
       </div>
       <div className="w-full ml-64 sticky">
         <div className="bg-slate-200 border-b-[1px] border-gray-300 h-16 ">
-          <div>
+          <div className="flex">
+            <h3 className="block ml-5 w-40 pt-4 text-lg text-gray-500 ">{user.firstName + " " + user.lastName}</h3>
             <h3 className="block ml-auto mr-0 w-20 pt-4 text-lg cursor-pointer" onClick={handleLogout}>
               Вийти
             </h3>
