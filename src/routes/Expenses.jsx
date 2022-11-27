@@ -20,7 +20,7 @@ export async function loader({ request }) {
   };
 }
 
-const Expenses = () => {
+const Expenses = ({ text = "Витрати", incomings = false }) => {
   const [isLoading, setLoading] = useState(null);
 
   const { category, dateFrom, dateTo } = useLoaderData();
@@ -44,7 +44,7 @@ const Expenses = () => {
 
   return (
     <div>
-      <PageHeader text="Витрати" />
+      <PageHeader text={text} />
 
       <Form className="flex gap-6 p-4 mt-8">
         <select
@@ -120,7 +120,7 @@ const Expenses = () => {
           </button>
         </div>
         <div className="w-full rounded h-96 m-4 mt-1">
-          <Outlet />
+          <Outlet context={incomings} />
         </div>
       </div>
     </div>

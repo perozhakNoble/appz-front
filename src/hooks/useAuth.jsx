@@ -42,12 +42,22 @@ export const AuthProvider = ({ children }) => {
     callback();
   };
 
+  const isAdmin = user?.role === "Admin";
+  const isUser = user?.role === "User";
+
+  const getRole = () => {
+    return isAdmin ? "Адміністратор" : isUser ? "Користувач" : "";
+  };
+
   const value = useMemo(
     () => ({
       user,
       login,
       logout,
       update,
+      isUser,
+      isAdmin,
+      getRole,
     }),
     // eslint-disable-next-line
     [user]

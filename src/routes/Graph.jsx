@@ -1,6 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useOutletContext } from "react-router-dom";
 import { getGraphData } from "../services/graph";
 
 import { GraphBuilder } from "../components/GraphBuilder.class";
@@ -23,13 +23,18 @@ export async function loader({ request }) {
 
 const Graph = () => {
   const { graphData } = useLoaderData();
+  const isIncomings = useOutletContext();
 
   const pieData = [
-    { value: graphData.reduce((prevValue, current) => (prevValue += current.USD), 0), name: "USD", color: "#39CCCC" },
+    {
+      value: graphData.reduce((prevValue, current) => (prevValue += current.USD), 0),
+      name: "USD",
+      color: isIncomings ? "#34568B" : "#39CCCC",
+    },
     {
       value: graphData.reduce((prevValue, current) => (prevValue += current.UAH), 0),
       name: "UAH",
-      color: "#ffa534",
+      color: isIncomings ? "#FF6F61" : "#ffa534",
     },
   ];
 
@@ -61,15 +66,15 @@ const Graph = () => {
     .setBars([
       {
         dataKey: "USD",
-        fill: "#8884d8",
+        fill: isIncomings ? "#F7CAC9" : "#8884d8",
       },
       {
         dataKey: "UAH",
-        fill: "rgba(135,203,22,0.6)",
+        fill: isIncomings ? "#92A8D1" : "rgba(135,203,22,0.6)",
       },
     ])
     .setMargin({ top: 5, right: 20, bottom: 25, left: 20 })
-    .setWidth(650)
+    .setWidth(isIncomings ? 1000 : 650)
     .setHeight(450)
     .render();
 
@@ -79,6 +84,17 @@ const Graph = () => {
     .setWidth(650)
     .setHeight(450)
     .render();
+
+  if (isIncomings)
+    return (
+      <div className=" h-full p-2" style={{ width: "70vw" }}>
+        <div className="w-full text-center"> {BarGraphic}</div>
+        <div className="h-20" />
+        <div className="w-full text-center pl-60"> {PieGraphic}</div>
+
+        <div className="h-20" />
+      </div>
+    );
 
   return (
     <div className=" h-full p-2" style={{ width: "70vw" }}>
